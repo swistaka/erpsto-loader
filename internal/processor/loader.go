@@ -50,6 +50,10 @@ func Process(cfg *config.Config, db *sql.DB, logger *logger.FileLogger) error {
 		return fmt.Errorf("error unmarshaling main packet: %w", err)
 	}
 
+	// product будем сохранять только те, которые встречаются в документах
+	var rawEntitiesProduct []json.RawMessage
+	usedProductIDs := make(map[string]bool)
+
 	// Обработка каждой сущности
 	for _, rawEntity := range input.Data {
 		// считаем тип объекта и id - для дальнейшей маршрутизации обработки
@@ -78,32 +82,62 @@ func Process(cfg *config.Config, db *sql.DB, logger *logger.FileLogger) error {
 
 		switch baseEntity.ObjectType {
 		case "sto":
-			err = entities.SaveSTO(db, rawEntity, entityHash, cfg.CodePage)
+			err = entities.SaveSTO(db, rawEntity, entityHash)
 		case "warehouse":
-			err = entities.SaveWarehouse(db, rawEntity, entityHash, cfg.CodePage)
+			err = entities.SaveWarehouse(db, rawEntity, entityHash)
 		case "client":
-			err = entities.SaveClient(db, rawEntity, entityHash, cfg.CodePage)
+			err = entities.SaveClient(db, rawEntity, entityHash)
 		case "contract":
-			err = entities.SaveContract(db, rawEntity, entityHash, cfg.CodePage)
+			err = entities.SaveContract(db, rawEntity, entityHash)
 		case "car":
-			err = entities.SaveCar(db, rawEntity, entityHash, cfg.CodePage)
+			err = entities.SaveCar(db, rawEntity, entityHash)
 		case "product":
-			err = entities.SaveProduct(db, rawEntity, entityHash, cfg.CodePage)
+			rawEntitiesProduct = append(rawEntitiesProduct, rawEntity)
+			//err = entities.SaveProduct(db, rawEntity, entityHash)
 		case "invoice":
-			err = entities.SaveInvoice(db, rawEntity, entityHash, cfg.CodePage)
+			err = entities.SaveInvoice(db, rawEntity, entityHash, usedProductIDs)
 		case "realization":
-			err = entities.SaveRealization(db, rawEntity, entityHash, cfg.CodePage)
+			err = entities.SaveRealization(db, rawEntity, entityHash, usedProductIDs)
 		case "moving":
-			err = entities.SaveMoving(db, rawEntity, entityHash, cfg.CodePage)
+			err = entities.SaveMoving(db, rawEntity, entityHash, usedProductIDs)
 		case "dismantling":
-			err = entities.SaveDismantling(db, rawEntity, entityHash, cfg.CodePage)
+			err = entities.SaveDismantling(db, rawEntity, entityHash, usedProductIDs)
 		case "inventory":
-			err = entities.SaveInventory(db, rawEntity, entityHash, cfg.CodePage)
+			err = entities.SaveInventory(db, rawEntity, entityHash, usedProductIDs)
 		case "request":
-			err = entities.SaveRequest(db, rawEntity, entityHash, cfg.CodePage)
+			err = entities.SaveRequest(db, rawEntity, entityHash, usedProductIDs)
 		default:
 			logger.LogError(fmt.Errorf("unknown entity type: %s", baseEntity.ObjectType))
 			continue
+		}
+
+		if err != nil {
+			logger.LogError(fmt.Errorf("save %s failed: %w", baseEntity.ObjectType, err))
+		}
+	}
+
+	// вторым проходом - обработка product
+	for _, rawEntity := range rawEntitiesProduct {
+		// считаем тип объекта и id - для дальнейшей маршрутизации обработки
+		var baseEntity struct {
+			ObjectType string `json:"objectType"`
+			ID         string `json:"id"`
+		}
+		if err := json.Unmarshal(rawEntity, &baseEntity); err != nil {
+			logger.LogError(fmt.Errorf("error unmarshaling entity: %w", err))
+			continue
+		}
+
+		if !usedProductIDs[baseEntity.ID] {
+			continue
+		}
+
+		// Вычисляем хэш сущности
+		entityHash := computeHash(rawEntity)
+
+		switch baseEntity.ObjectType {
+		case "product":
+			err = entities.SaveProduct(db, rawEntity, entityHash)
 		}
 
 		if err != nil {

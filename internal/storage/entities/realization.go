@@ -35,7 +35,7 @@ type RealizationPosition struct {
 	Sum             string  `json:"sum"`
 }
 
-func SaveRealization(db *sql.DB, data []byte, entityHash string, codePage string) error {
+func SaveRealization(db *sql.DB, data []byte, entityHash string, usedProductIDs map[string]bool) error {
 	var entity Realization
 	if err := json.Unmarshal(data, &entity); err != nil {
 		return fmt.Errorf("failed to unmarshal realization: %w", err)
@@ -108,6 +108,9 @@ func SaveRealization(db *sql.DB, data []byte, entityHash string, codePage string
 		if err != nil {
 			return fmt.Errorf("failed to save realization position: %w", err)
 		}
+
+		// заполняем карту используемых элементов Product
+		usedProductIDs[pos.ProductId] = true
 	}
 
 	// Сохраняем хэш

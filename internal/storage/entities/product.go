@@ -22,7 +22,7 @@ type Product struct {
 }
 
 // Cохранение сущности в базу данных с хешированием
-func SaveProduct(db *sql.DB, data []byte, entityHash string, codePage string) error {
+func SaveProduct(db *sql.DB, data []byte, entityHash string) error {
 	var entity Product
 	if err := json.Unmarshal(data, &entity); err != nil {
 		return fmt.Errorf("failed to unmarshal product: %w", err)
@@ -42,14 +42,14 @@ func SaveProduct(db *sql.DB, data []byte, entityHash string, codePage string) er
 	// Сохраняем данные
 	_, err = tx.Exec(`
 		INSERT OR REPLACE INTO product (
-			id, art_id, pin, name, description, unit, 
+			id, name, art_id, pin, description, unit, 
 			percent_vat, ttn_date, ttn_number, cost, 
 			updated_at, is_updated
 		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 		entity.ID,
+		entity.Name,
 		entity.ArtId,
 		entity.PIN,
-		entity.Name,
 		entity.Description,
 		entity.Unit,
 		entity.PercentVat,

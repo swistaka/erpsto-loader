@@ -16,7 +16,7 @@ type STO struct {
 }
 
 // Cохранение сущности в базу данных с хешированием
-func SaveSTO(db *sql.DB, data []byte, entityHash string, codePage string) error {
+func SaveSTO(db *sql.DB, data []byte, entityHash string) error {
 	var entity STO
 	if err := json.Unmarshal(data, &entity); err != nil {
 		return fmt.Errorf("failed to unmarshal sto: %w", err)

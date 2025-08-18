@@ -30,7 +30,7 @@ type InventoryPosition struct {
 	Sum        string `json:"sum"`
 }
 
-func SaveInventory(db *sql.DB, data []byte, entityHash string, codePage string) error {
+func SaveInventory(db *sql.DB, data []byte, entityHash string, usedProductIDs map[string]bool) error {
 	var entity Inventory
 	if err := json.Unmarshal(data, &entity); err != nil {
 		return fmt.Errorf("failed to unmarshal inventory: %w", err)
@@ -96,6 +96,9 @@ func SaveInventory(db *sql.DB, data []byte, entityHash string, codePage string) 
 		if err != nil {
 			return fmt.Errorf("failed to save inventory position: %w", err)
 		}
+
+		// заполняем карту используемых элементов Product
+		usedProductIDs[pos.ProductId] = true
 	}
 
 	// Сохраняем хэш

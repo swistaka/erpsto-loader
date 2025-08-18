@@ -9,8 +9,7 @@
             "program": "${workspaceRoot}",
             "args":[
                 "-type=file",
-                "-filename=F:\\2_Dev\\_devGo\\erpsto\\ERP-STO-20250815.json",
-                "-codepage=UTF-8"
+                "-filename=F:\\2_Dev\\_devGo\\erpsto\\ERP-STO-20250815.json"
             ]
         }
     ]

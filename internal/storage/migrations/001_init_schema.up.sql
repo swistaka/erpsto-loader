@@ -23,8 +23,8 @@ CREATE TABLE IF NOT EXISTS warehouse (
 
 CREATE TABLE IF NOT EXISTS client (
         id TEXT PRIMARY KEY,
+        name TEXT,
         type TEXT,
-        short_name TEXT,
         unp TEXT,
         full_name TEXT,
         address TEXT,
@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS client (
 CREATE TABLE IF NOT EXISTS contract (
         id TEXT PRIMARY KEY,
         client_id TEXT,
+        name TEXT,
         number TEXT,
         date TEXT,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -51,6 +52,7 @@ CREATE TABLE IF NOT EXISTS contract (
 CREATE TABLE IF NOT EXISTS car (
         id TEXT PRIMARY KEY,
         client_id TEXT,
+        name TEXT,
         brand TEXT,
         model TEXT,
         color TEXT,
@@ -68,9 +70,9 @@ CREATE TABLE IF NOT EXISTS car (
 
 CREATE TABLE IF NOT EXISTS product (
         id TEXT PRIMARY KEY,
+        name TEXT,
         art_id TEXT,
         pin TEXT,
-        name TEXT,
         description TEXT,
         unit TEXT,
         percent_vat TEXT,
@@ -266,12 +268,12 @@ CREATE TABLE IF NOT EXISTS request (
         close_status_date TEXT,
         sum_work TEXT,
         sum_parts TEXT,
-        sum_req TEXT,
+        sum TEXT,
         created_user_short_fio TEXT,
         normo_time_fact TEXT,
         normo_time_plan TEXT,
         percent_vat TEXT,
-        sum_req_without_vat TEXT,
+        sum_without_vat TEXT,
         sum_vat TEXT,
         reason_for_petition TEXT,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

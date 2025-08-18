@@ -84,7 +84,7 @@ type RequestPerformer struct {
 	ProductivityPercent string `json:"productivityPercent"`
 }
 
-func SaveRequest(db *sql.DB, data []byte, entityHash string, codePage string) error {
+func SaveRequest(db *sql.DB, data []byte, entityHash string, usedProductIDs map[string]bool) error {
 	var entity Request
 	if err := json.Unmarshal(data, &entity); err != nil {
 		return fmt.Errorf("failed to unmarshal request: %w", err)
@@ -110,8 +110,8 @@ func SaveRequest(db *sql.DB, data []byte, entityHash string, codePage string) er
 			car_brand, car_engine_capacity, car_license_plate_number, 
 			car_manufacture_year, car_mileage, car_model_name, car_modification, 
 			car_vin, complete_status_date, close_status_date, sum_work, sum_parts, 
-			sum_req, created_user_short_fio, normo_time_fact, normo_time_plan, 
-			percent_vat, sum_req_without_vat, sum_vat, reason_for_petition, 
+			sum, created_user_short_fio, normo_time_fact, normo_time_plan, 
+			percent_vat, sum_without_vat, sum_vat, reason_for_petition, 
 			updated_at, is_updated
 		) VALUES (
 		 	?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
@@ -210,6 +210,9 @@ func SaveRequest(db *sql.DB, data []byte, entityHash string, codePage string) er
 		if err != nil {
 			return fmt.Errorf("failed to save request position: %w", err)
 		}
+
+		// заполняем карту используемых элементов Product
+		usedProductIDs[pos.ProductId] = true
 	}
 
 	// Сохраняем данные - ТЧ.Работы

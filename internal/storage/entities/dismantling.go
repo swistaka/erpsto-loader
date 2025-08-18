@@ -31,7 +31,7 @@ type DismantlingPosition struct {
 	Sum       string `json:"sum"`
 }
 
-func SaveDismantling(db *sql.DB, data []byte, entityHash string, codePage string) error {
+func SaveDismantling(db *sql.DB, data []byte, entityHash string, usedProductIDs map[string]bool) error {
 	var entity Dismantling
 	if err := json.Unmarshal(data, &entity); err != nil {
 		return fmt.Errorf("failed to unmarshal dismantling: %w", err)
@@ -73,6 +73,9 @@ func SaveDismantling(db *sql.DB, data []byte, entityHash string, codePage string
 		return fmt.Errorf("failed to save dismantling: %w", err)
 	}
 
+	// заполняем карту используемых элементов Product
+	usedProductIDs[entity.ProductId] = true
+
 	// Удаляем старые строки ТЧ.Товары
 	_, err = tx.Exec(`
 		DELETE FROM dismantling_position WHERE dismantling_id = ?`,
@@ -99,6 +102,9 @@ func SaveDismantling(db *sql.DB, data []byte, entityHash string, codePage string
 		if err != nil {
 			return fmt.Errorf("failed to save dismantling position: %w", err)
 		}
+
+		// заполняем карту используемых элементов Product
+		usedProductIDs[pos.ProductId] = true
 	}
 
 	// Сохраняем хэш

@@ -21,7 +21,7 @@ type Client struct {
 }
 
 // Cохранение сущности в базу данных с хешированием
-func SaveClient(db *sql.DB, data []byte, entityHash string, codePage string) error {
+func SaveClient(db *sql.DB, data []byte, entityHash string) error {
 	var entity Client
 	if err := json.Unmarshal(data, &entity); err != nil {
 		return fmt.Errorf("failed to unmarshal client: %w", err)
@@ -41,12 +41,12 @@ func SaveClient(db *sql.DB, data []byte, entityHash string, codePage string) err
 	// Сохраняем данные
 	_, err = tx.Exec(`
 		INSERT OR REPLACE INTO client (
-			id, type, short_name, unp, full_name, address, 
+			id, name, type, unp, full_name, address, 
 			bank_name, bik, bank_account, updated_at, is_updated
 		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 		entity.ID,
-		entity.Type,
 		entity.ShortName,
+		entity.Type,
 		entity.UNP,
 		entity.FullName,
 		entity.Address,

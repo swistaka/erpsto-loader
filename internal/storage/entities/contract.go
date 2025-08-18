@@ -16,7 +16,7 @@ type Contract struct {
 }
 
 // Cохранение сущности в базу данных с хешированием
-func SaveContract(db *sql.DB, data []byte, entityHash string, codePage string) error {
+func SaveContract(db *sql.DB, data []byte, entityHash string) error {
 	var entity Contract
 	if err := json.Unmarshal(data, &entity); err != nil {
 		return fmt.Errorf("failed to unmarshal contract: %w", err)
@@ -36,10 +36,11 @@ func SaveContract(db *sql.DB, data []byte, entityHash string, codePage string) e
 	// Сохраняем данные
 	_, err = tx.Exec(`
 		INSERT OR REPLACE INTO contract (
-			id, client_id, number, date, updated_at, is_updated
-		) VALUES (?, ?, ?, ?, ?, ?)`,
+			id, client_id, name, number, date, updated_at, is_updated
+		) VALUES (?, ?, ?, ?, ?, ?, ?)`,
 		entity.ID,
 		entity.ClientId,
+		fmt.Sprintf("%s от %s г.", entity.Number, entity.Date),
 		entity.Number,
 		entity.Date,
 		time.Now().Format(time.RFC3339),

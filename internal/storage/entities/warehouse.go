@@ -16,7 +16,7 @@ type Warehouse struct {
 }
 
 // Cохранение сущности в базу данных с хешированием
-func SaveWarehouse(db *sql.DB, data []byte, entityHash string, codePage string) error {
+func SaveWarehouse(db *sql.DB, data []byte, entityHash string) error {
 	var entity Warehouse
 	if err := json.Unmarshal(data, &entity); err != nil {
 		return fmt.Errorf("failed to unmarshal warehouse: %w", err)

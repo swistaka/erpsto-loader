@@ -23,7 +23,7 @@ type Car struct {
 }
 
 // Cохранение сущности в базу данных с хешированием
-func SaveCar(db *sql.DB, data []byte, entityHash string, codePage string) error {
+func SaveCar(db *sql.DB, data []byte, entityHash string) error {
 	var entity Car
 	if err := json.Unmarshal(data, &entity); err != nil {
 		return fmt.Errorf("failed to unmarshal car: %w", err)
@@ -43,12 +43,13 @@ func SaveCar(db *sql.DB, data []byte, entityHash string, codePage string) error 
 	// Сохраняем данные
 	_, err = tx.Exec(`
 		INSERT OR REPLACE INTO car (
-			id, client_id, brand, model, color, year, 
+			id, client_id, name, brand, model, color, year, 
 			license_plate_number, engine_code, vin, 
 			mileage, comment, updated_at, is_updated
-		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 		entity.ID,
 		entity.ClientId,
+		fmt.Sprintf("%s %s %s", entity.Brand, entity.Model, entity.LicensePlateNumber),
 		entity.Brand,
 		entity.Model,
 		entity.Color,

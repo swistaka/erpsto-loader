@@ -35,7 +35,7 @@ type InvoicePosition struct {
 	Sum             string `json:"sum"`
 }
 
-func SaveInvoice(db *sql.DB, data []byte, entityHash string, codePage string) error {
+func SaveInvoice(db *sql.DB, data []byte, entityHash string, usedProductIDs map[string]bool) error {
 	var entity Invoice
 	if err := json.Unmarshal(data, &entity); err != nil {
 		return fmt.Errorf("failed to unmarshal invoice: %w", err)
@@ -108,6 +108,9 @@ func SaveInvoice(db *sql.DB, data []byte, entityHash string, codePage string) er
 		if err != nil {
 			return fmt.Errorf("failed to save invoice position: %w", err)
 		}
+
+		// заполняем карту используемых элементов Product
+		usedProductIDs[pos.ProductId] = true
 	}
 
 	// Сохраняем хэш

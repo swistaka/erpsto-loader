@@ -11,6 +11,7 @@ import (
 type Contract struct {
 	ID       string `json:"id"`
 	ClientId string `json:"clientId"`
+	Name     string `json:"name"`
 	Number   string `json:"number"`
 	Date     string `json:"date"`
 }
@@ -40,7 +41,7 @@ func SaveContract(db *sql.DB, data []byte, entityHash string) error {
 		) VALUES (?, ?, ?, ?, ?, ?, ?)`,
 		entity.ID,
 		entity.ClientId,
-		fmt.Sprintf("%s от %s г.", entity.Number, entity.Date),
+		entity.Name, //fmt.Sprintf("%s от %s г.", entity.Number, entity.Date),
 		entity.Number,
 		entity.Date,
 		time.Now().Format(time.RFC3339),

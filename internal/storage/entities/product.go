@@ -9,16 +9,16 @@ import (
 )
 
 type Product struct {
-	ID          string  `json:"id"`
-	ArtId       string  `json:"artId"`
-	PIN         string  `json:"pin"`
-	Name        string  `json:"name"`
-	Description string  `json:"description"`
-	Unit        string  `json:"unit"`
-	PercentVat  float64 `json:"percentVat"`
-	TtnDate     string  `json:"ttnDate"`
-	TtnNumber   string  `json:"ttnNumber"`
-	Cost        string  `json:"cost"`
+	ID          string `json:"id"`
+	ArtId       string `json:"artId"`
+	PIN         string `json:"pin"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Unit        string `json:"unit"`
+	PercentVat  string `json:"percentVat"`
+	TtnDate     string `json:"ttnDate"`
+	TtnNumber   string `json:"ttnNumber"`
+	Cost        string `json:"cost"`
 }
 
 // Cохранение сущности в базу данных с хешированием

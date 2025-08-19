@@ -11,6 +11,7 @@ import (
 type Car struct {
 	ID                 string `json:"id"`
 	ClientId           string `json:"clientId"`
+	Name               string `json:"name"`
 	Brand              string `json:"brand"`
 	Model              string `json:"model"`
 	Color              string `json:"color"`
@@ -49,7 +50,7 @@ func SaveCar(db *sql.DB, data []byte, entityHash string) error {
 		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 		entity.ID,
 		entity.ClientId,
-		fmt.Sprintf("%s %s %s", entity.Brand, entity.Model, entity.LicensePlateNumber),
+		entity.Name, //fmt.Sprintf("%s %s %s", entity.Brand, entity.Model, entity.LicensePlateNumber),
 		entity.Brand,
 		entity.Model,
 		entity.Color,

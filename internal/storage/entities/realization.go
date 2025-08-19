@@ -24,15 +24,15 @@ type Realization struct {
 }
 
 type RealizationPosition struct {
-	ID              string  `json:"id"`
-	ProductId       string  `json:"productId"`
-	Amount          string  `json:"amount"`
-	Price           string  `json:"price"`
-	PriceWithoutVat string  `json:"priceWithoutVat"`
-	SumWithoutVat   string  `json:"sumWithoutVat"`
-	PercentVat      float64 `json:"percentVat"`
-	SumVat          string  `json:"sumVat"`
-	Sum             string  `json:"sum"`
+	ID              string `json:"id"`
+	ProductId       string `json:"productId"`
+	Amount          string `json:"amount"`
+	Price           string `json:"price"`
+	PriceWithoutVat string `json:"priceWithoutVat"`
+	SumWithoutVat   string `json:"sumWithoutVat"`
+	PercentVat      string `json:"percentVat"`
+	SumVat          string `json:"sumVat"`
+	Sum             string `json:"sum"`
 }
 
 func SaveRealization(db *sql.DB, data []byte, entityHash string, usedProductIDs map[string]bool) error {

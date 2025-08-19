@@ -11,7 +11,7 @@ import (
 type Client struct {
 	ID          string `json:"id"`
 	Type        string `json:"type"`
-	ShortName   string `json:"shortName"`
+	Name        string `json:"name"`
 	UNP         string `json:"unp"`
 	FullName    string `json:"fullName"`
 	Address     string `json:"address"`
@@ -45,7 +45,7 @@ func SaveClient(db *sql.DB, data []byte, entityHash string) error {
 			bank_name, bik, bank_account, updated_at, is_updated
 		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 		entity.ID,
-		entity.ShortName,
+		entity.Name,
 		entity.Type,
 		entity.UNP,
 		entity.FullName,

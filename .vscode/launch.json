@@ -9,7 +9,7 @@
             "program": "${workspaceRoot}",
             "args":[
                 "-type=file",
-                "-filename=F:\\2_Dev\\_devGo\\erpsto\\ERP-STO-20250819.json"
+                "-filename=F:\\2_Dev\\_devGo\\erpsto\\ERP-STO-20250821.json"
             ]
         }
     ]

@@ -154,6 +154,38 @@ CREATE TABLE IF NOT EXISTS realization (
         );
 
 
+CREATE TABLE IF NOT EXISTS refund (
+        id TEXT PRIMARY KEY,
+        ext_index TEXT,
+        doc_date TEXT,
+        doc_number TEXT,
+        status BOOLEAN,
+        sto_id TEXT,
+        client_id TEXT,
+        sum TEXT,
+        sum_vat TEXT,
+        comment TEXT,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        is_updated BOOLEAN,
+        is_fixed BOOLEAN DEFAULT FALSE,
+        base_uid TEXT DEFAULT ""
+    );
+
+    CREATE TABLE IF NOT EXISTS refund_position (
+            id TEXT,
+            refund_id TEXT,
+            product_id TEXT,
+            amount TEXT,
+            price TEXT,
+            price_without_vat TEXT,
+            sum_without_vat TEXT,
+            percent_vat TEXT,
+            sum_vat TEXT,
+            sum TEXT,
+            PRIMARY KEY (id, refund_id)
+        );
+
+
 CREATE TABLE IF NOT EXISTS moving (
         id TEXT PRIMARY KEY,
         ext_index TEXT,

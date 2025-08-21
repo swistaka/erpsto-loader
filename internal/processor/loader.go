@@ -98,6 +98,8 @@ func Process(cfg *config.Config, db *sql.DB, logger *logger.FileLogger) error {
 			err = entities.SaveInvoice(db, rawEntity, entityHash, usedProductIDs)
 		case "realization":
 			err = entities.SaveRealization(db, rawEntity, entityHash, usedProductIDs)
+		case "refund":
+			err = entities.SaveRefund(db, rawEntity, entityHash, usedProductIDs)
 		case "moving":
 			err = entities.SaveMoving(db, rawEntity, entityHash, usedProductIDs)
 		case "dismantling":
